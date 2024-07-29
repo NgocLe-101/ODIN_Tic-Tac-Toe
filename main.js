@@ -212,7 +212,12 @@ const displayController = (function () {
         if (gameManager.isEnded()) {
           // Use setTimeout to delay the alert
           setTimeout(() => {
-            alert("Game ended!");
+            const winner = gameManager.getWinner();
+            if (winner === null) {
+                alert("Game ended! Tie!");
+            } else {
+                alert(`Game ended! ${winner.getName()} won!`);
+            }
           }, 0); // 0 milliseconds delay
         }
       } else {
@@ -223,6 +228,31 @@ const displayController = (function () {
   };
   return { renderBoard };
 })();
+
+function startGame() {
+    const dialog = document.querySelector('.dialog-container');
+    toggleHidden('.dialog-container');
+    const p1Name = dialog.querySelector('#player1-name').value;
+    const p2Name = dialog.querySelector('#player2-name').value;
+    const header = document.querySelector('.container > .header');
+    header.querySelector('#player1 > h1').innerText = p1Name;
+    header.querySelector('#player2 > h1').innerText = p2Name;
+    const playerList = gameManager.getPlayerList();
+    playerList[0].setPlayerName(p1Name);
+    playerList[1].setPlayerName(p2Name);
+
+    toggleHidden('.header');
+    toggleHidden('.main-content');
+}
+
+function toggleHidden(selector) {
+    const ele = document.querySelector(selector);
+    if (ele.classList.contains('hidden')) {
+        ele.classList.remove('hidden');
+    } else {
+        ele.classList.add('hidden');
+    }
+}
 
 displayController.renderBoard();
 
