@@ -85,7 +85,7 @@ body {
     background-color: rgba(100, 130, 173, 0.4);
 }
 
-.dialog {
+.player-name-dialog {
     width: 35vw;
     height: 42vh;
     background-color: #7FA1C3;
@@ -93,19 +93,19 @@ body {
     border-radius: 8px;
 }
 
-.dialog > .form {
+.player-name-dialog > .form {
     height: 100%;
     line-height: 65px;
 }
 
-.dialog > .form > .input-field {
+.player-name-dialog > .form > .input-field {
     position: relative;
     height: 65px;
     margin: 25px 0;
     margin-bottom: 2.8rem;
 }
 
-.dialog > .form > .input-field > input {
+.player-name-dialog > .form > .input-field > input {
     position: absolute;
     width: 80%;
     outline: none;
@@ -119,7 +119,7 @@ body {
     z-index: 1111;
 }
 
-.dialog > .form > .input-field > .lableline {
+.player-name-dialog > .form > .input-field > .lableline {
     position: absolute;
     font-size: 1.6rem;
     color: #E2DAD6;
@@ -129,18 +129,18 @@ body {
     transition: 0.2s ease;
 }
 
-.dialog > .form > .input-field > input:focus,
-.dialog > .form > .input-field > input:valid {
+.player-name-dialog > .form > .input-field > input:focus,
+.player-name-dialog > .form > .input-field > input:valid {
     color: #F5EDED;
     border: 4px solid #F5EDED;
 }
 
-.dialog > .form > .input-field > input:invalid {
+.player-name-dialog > .form > .input-field > input:invalid {
     border: 4px solid #fb4e4e;
 }
 
-.dialog > .form > .input-field > input:focus + .lableline,
-.dialog > .form > .input-field > input:valid + .lableline {
+.player-name-dialog > .form > .input-field > input:focus + .lableline,
+.player-name-dialog > .form > .input-field > input:valid + .lableline {
     color: #F5EDED;
     height: 30px;
     line-height: 30px;
@@ -151,7 +151,6 @@ body {
 
 .submit-btn {
     width: 100%;
-    height: 1.1rem;
 }
 
 .submit-btn button {
@@ -170,6 +169,21 @@ body {
 
 .submit-btn button:hover {
     background-color: #efd1c0;
+}
+
+.end-game-dialog {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30rem;
+    height: auto;
+    padding: 1.2rem;
+    background-color: #7FA1C3;
+}
+
+.end-game-dialog > * {
+    margin: 0.5rem;
 }
 
 .hidden {

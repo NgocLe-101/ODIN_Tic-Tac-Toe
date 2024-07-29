@@ -94,6 +94,14 @@ const gameManager = (function () {
       }
       return false;
     };
+    const reset = () => {
+        _board = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+          ];
+          _boardState = true;
+    }
     const _checkFullBoard = () => {
       let count = 0;
       for (let i = 0; i < _board.length; i++) {
@@ -121,12 +129,17 @@ const gameManager = (function () {
     const getBoardState = function () {
       return _boardState;
     };
-    return { getBoard, moveOnBoard, getBoardState };
+    return { getBoard, moveOnBoard, getBoardState, reset };
   })();
   let _playerTurn = true; // true = player1's turn, false = player2's turn
   const switchTurn = () => {
     _playerTurn = !_playerTurn;
   };
+  const reset = () => {
+    gameBoard.reset();
+    winner = null;
+    _playerTurn = true;
+  }
   const isEnded = () => {
     return !gameBoard.getBoardState();
   };
@@ -146,6 +159,7 @@ const gameManager = (function () {
     gameBoard,
     getActivePlayer,
     getPlayerList,
+    reset,
   };
 })();
 
@@ -171,6 +185,7 @@ function createUser(name, typeOfMove) {
 
 const displayController = (function () {
   const _boardContainer = document.querySelector("div.board-container");
+  let _endgameTitle = '';
   const renderPlayerInfos = () => {
     const playerList = gameManager.getPlayerList();
     const p1Info = document.querySelector(".header #player1 h1");
@@ -189,6 +204,17 @@ const displayController = (function () {
       }
     }
   };
+  const renderEndgameDialog = () => {
+    const winner = gameManager.getWinner();
+    if (winner === null) {
+        _endgameTitle = 'Tie!';
+    } else {
+        _endgameTitle = `${winner.getName()} won!`;
+    }
+    const heading = document.querySelector('.end-game-dialog > h1');
+    heading.innerText = _endgameTitle;
+    _removeHidden('.end-game-dialog','.dialog-container');
+  }
   const _clearBoard = () => {
     _boardContainer.innerHTML = "";
   };
@@ -212,12 +238,7 @@ const displayController = (function () {
         if (gameManager.isEnded()) {
           // Use setTimeout to delay the alert
           setTimeout(() => {
-            const winner = gameManager.getWinner();
-            if (winner === null) {
-                alert("Game ended! Tie!");
-            } else {
-                alert(`Game ended! ${winner.getName()} won!`);
-            }
+            renderEndgameDialog();
           }, 0); // 0 milliseconds delay
         }
       } else {
@@ -226,35 +247,49 @@ const displayController = (function () {
     });
     return cellContainer;
   };
-  return { renderBoard };
+  const showIngame = () => {
+    _setHidden('.player-name-dialog', '.end-game-dialog', '.dialog-container');
+    _removeHidden('.header','.main-content');
+  }
+  const _setHidden = (...selectors) => {
+    selectors.forEach((selector) => {
+      const ele = document.querySelector(selector);
+      if (!ele.classList.contains("hidden")) {
+        ele.classList.add("hidden");
+      }
+    });
+  };
+  const _removeHidden = (...selectors) => {
+    selectors.forEach(selector => {
+        const ele = document.querySelector(selector);
+        if (ele.classList.contains('hidden')) {
+            ele.classList.remove('hidden');
+        }
+    });
+  }
+  const showEndgameDialog = () => {
+    _removeHidden('end-game-dialog');
+  }
+  return { renderBoard, renderPlayerInfos, showIngame, showEndgameDialog };
 })();
 
 function startGame() {
     const dialog = document.querySelector('.dialog-container');
-    toggleHidden('.dialog-container');
     const p1Name = dialog.querySelector('#player1-name').value;
     const p2Name = dialog.querySelector('#player2-name').value;
-    const header = document.querySelector('.container > .header');
-    header.querySelector('#player1 > h1').innerText = p1Name;
-    header.querySelector('#player2 > h1').innerText = p2Name;
     const playerList = gameManager.getPlayerList();
     playerList[0].setPlayerName(p1Name);
     playerList[1].setPlayerName(p2Name);
-
-    toggleHidden('.header');
-    toggleHidden('.main-content');
+    displayController.renderPlayerInfos();
+    displayController.renderBoard();
+    displayController.showIngame();
 }
 
-function toggleHidden(selector) {
-    const ele = document.querySelector(selector);
-    if (ele.classList.contains('hidden')) {
-        ele.classList.remove('hidden');
-    } else {
-        ele.classList.add('hidden');
-    }
+function restartGame() {
+    gameManager.reset();
+    displayController.renderBoard();
+    displayController.showIngame();
 }
-
-displayController.renderBoard();
 
 // console.log("Tic Tac Toe Game!\n")
 // while (!gameManager.isEnded()) {
